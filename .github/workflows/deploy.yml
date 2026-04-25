@@ -6,6 +6,7 @@ on:
       - main
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   PROJECT_ID: mikewyantjr-dev
   REGION: us-east1
   REPO_NAME: imr-repo
