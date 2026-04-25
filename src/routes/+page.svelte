@@ -204,37 +204,3 @@
   }
 </style>
 
-
-  <!-- Footer -->
-  <footer class="p-10 border-t border-blueprint-blue mt-auto">
-    <div class="grid md:grid-cols-3 gap-10">
-      <div>
-        <div class="mono text-mission-orange mb-4">ENTITY_DATA</div>
-        <p>Integrated Materials Reuse Inc.</p>
-        <p class="text-sm text-lunar-gray/50 mt-2">[501(c)(3) PENDING]</p>
-      </div>
-      <div>
-        <div class="mono text-mission-orange mb-4">COORDINATES</div>
-        <p>Serving the I-90 Corridor</p>
-        <p>Contiguous NYS Counties</p>
-      </div>
-      <div>
-        <div class="mono text-mission-orange mb-4">TELEMETRY</div>
-        <p class="mono text-xs">LAT: 42.6526° N</p>
-        <p class="mono text-xs">LONG: 73.7562° W</p>
-      </div>
-    </div>
-    <div class="mt-10 pt-10 border-t border-blueprint-blue/30 text-center mono text-[10px] text-lunar-gray/30">
-      &copy; 2026 IMR_SYSTEMS // ALL RIGHTS RESERVED // SECURE_CONNECTION_ESTABLISHED
-    </div>
-  </footer>
-</main>
-
-<style>
-  :global(body) {
-    background-image: 
-      linear-gradient(to right, rgba(27, 38, 59, 0.1) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(27, 38, 59, 0.1) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-</style>
