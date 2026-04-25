@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-deep-space text-lunar-gray font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold uppercase tracking-wider;
+  }
+
+  .mono {
+    @apply font-mono;
+  }
+}
+
+@layer components {
+  .btn-mission {
+    @apply bg-mission-orange text-white px-6 py-3 font-bold uppercase tracking-tighter hover:bg-orange-600 transition-colors;
+  }
+  
+  .border-blueprint {
+    @apply border border-blueprint-blue;
+  }
+  
+  .status-indicator {
+    @apply font-mono text-xs px-2 py-1 border border-blueprint-blue bg-blueprint-blue/30;
+  }
+}
