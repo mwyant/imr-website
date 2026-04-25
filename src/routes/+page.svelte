@@ -42,15 +42,15 @@
         this.cp2y = Math.random() * height;
         this.progress = 0;
         this.speed = 0.001 + Math.random() * 0.002;
-        this.opacity = 0.1 + Math.random() * 0.3;
+        this.opacity = 0.4 + Math.random() * 0.4;
       }
 
       draw() {
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.bezierCurveTo(this.cp1x, this.cp1y, this.cp2x, this.cp2y, this.targetX, this.targetY);
-        ctx.strokeStyle = `rgba(27, 38, 59, ${this.opacity * (1 - Math.abs(this.progress - 0.5) * 2)})`;
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(43, 61, 94, ${this.opacity * (1 - Math.abs(this.progress - 0.5) * 2)})`;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
 
         this.progress += this.speed;
@@ -58,7 +58,7 @@
       }
     }
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
       particles.push(new Connection());
     }
 
@@ -102,7 +102,7 @@
       <div class="mono text-xs text-blueprint-blue mb-2">// UNIVERSAL_LAW_OF_MATERIAL_PERSISTENCE</div>
       <h2 class="text-3xl mb-6">Objective</h2>
       <p class="text-2xl leading-relaxed italic">
-        "In a closed system, nothing is waste—only matter in the wrong coordinates. IMR provides the trajectory to return that matter to productive use."
+        "Waste is matter at the wrong coordinates. IMR provides the trajectory to return industrial payloads to productive use."
       </p>
     </div>
   </section>
