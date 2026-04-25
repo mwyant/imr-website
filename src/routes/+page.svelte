@@ -1,4 +1,6 @@
 <script>
+  import { onMount } from 'svelte';
+
   const sequences = [
     { id: '01', title: 'Repurpose', desc: 'Identifying inherent value in decommissioned industrial components.' },
     { id: '02', title: 'Recovery', desc: 'Diverting structural payloads from the waste stream.' },
@@ -9,9 +11,70 @@
     { id: 'IMR-1', name: 'RE-ENERGIZE', status: 'PHASE 1: PROOF OF TECH', desc: 'Reclaiming surplus industrial PV systems for LMI energy resilience.' },
     { id: 'IMR-2', name: 'UNDO DEPOT', status: 'PHASE 2: LOGISTICS SETUP', desc: 'A regional hub for In-Situ Resource Utilization (ISRU) of structural materials.' }
   ];
+
+  let canvas;
+  onMount(() => {
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    const resize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Connection {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.targetX = Math.random() * width;
+        this.targetY = Math.random() * height;
+        this.cp1x = Math.random() * width;
+        this.cp1y = Math.random() * height;
+        this.cp2x = Math.random() * width;
+        this.cp2y = Math.random() * height;
+        this.progress = 0;
+        this.speed = 0.001 + Math.random() * 0.002;
+        this.opacity = 0.1 + Math.random() * 0.3;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.bezierCurveTo(this.cp1x, this.cp1y, this.cp2x, this.cp2y, this.targetX, this.targetY);
+        ctx.strokeStyle = `rgba(27, 38, 59, ${this.opacity * (1 - Math.abs(this.progress - 0.5) * 2)})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        this.progress += this.speed;
+        if (this.progress > 1) this.reset();
+      }
+    }
+
+    for (let i = 0; i < 15; i++) {
+      particles.push(new Connection());
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => p.draw());
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+  });
 </script>
 
-<main class="min-h-screen flex flex-col">
+<canvas bind:this={canvas} class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
+
+<main class="min-h-screen flex flex-col relative z-10">
   <!-- Header / Nav -->
   <header class="p-6 border-b border-blueprint-blue flex justify-between items-center">
     <div class="mono text-mission-orange font-bold text-xl">IMR_SYSTEMS_v2.0</div>
