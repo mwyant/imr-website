@@ -2,103 +2,15 @@
   import { onMount } from 'svelte';
 
   const sequences = [
-    { id: '01', title: 'Rebuild', desc: 'Partnering with municipalities and demolition teams to capture industrial-grade materials—steel, timber, and stone—before they leave the ecosystem.' },
-    { id: '02', title: 'Reuse', desc: 'Architecting a construction-based Barter Economy. Facilitating local exchanges to ensure materials reach those who need them most.' },
-    { id: '03', title: 'Repurpose', desc: 'Giving a second life to complex systems. Reclaiming PV panels and wind hardware to power the next generation of infrastructure.' }
+    { id: '01', title: 'Rebuild (ESRU)', desc: 'Utilizing Ex-Situ Resource Utilization (ESRU) to intercept construction and demolition materials, diverting high-value components from landfills to distressed communities.' },
+    { id: '02', title: 'Reuse (Renewables)', desc: 'Reclaiming, testing, and refurbishing decommissioned PV systems, wind turbines, and energy storage for distribution to LMI families and rural municipalities.' },
+    { id: '03', title: 'Repurpose (Brownfields)', desc: 'Collaborating with municipalities to transform legacy brownfield sites into public-benefit energy generation and free or low-cost EV charging infrastructure.' }
   ];
 
   const trajectory = [
-    { id: 'I-90', name: 'THE ELECTRIC CORRIDOR', status: 'VISION: REGIONAL IMPACT', desc: 'A self-sustaining transportation artery running from the NY corridor through Maine, powered by reclaimed energy.' },
-    { id: 'HUB-1', name: 'BROWNFIELD RENEWAL', status: 'PHASE 1: SITE SELECTION', desc: 'Transforming underutilized industrial sites into high-capacity charging hubs using repurposed solar arrays.' }
+    { id: 'ESRU-1', name: 'EX-SITU LOGISTICS', status: 'MISSION_CRITICAL', desc: 'Scaling reverse logistics and deconstruction expertise to serve low-to-moderate income (LMI) populations across the region.' },
+    { id: 'HUB-1', name: 'GOVERNMENT PARTNERSHIP', status: 'ACTIVE_COLLABORATION', desc: 'Lessening the burdens of government by redeveloping brownfield sites into public-benefit energy assets and community resources.' }
   ];
-
-  let canvas;
-  onMount(() => {
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let particles = [];
-
-    const resize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Connection {
-      constructor() {
-        this.reset();
-      }
-
-      reset() {
-        const centerX = width / 2;
-        const centerY = height / 2;
-        const radiusX = width * 0.4;
-        const radiusY = height * 0.3;
-
-        const getPoint = () => {
-          const angle = Math.random() * Math.PI * 2;
-          const r = 0.8 + Math.random() * 0.2;
-          return {
-            x: centerX + Math.cos(angle) * radiusX * r,
-            y: centerY + Math.sin(angle) * radiusY * r
-          };
-        };
-
-        const start = getPoint();
-        const end = getPoint();
-
-        this.x = start.x;
-        this.y = start.y;
-        this.targetX = end.x;
-        this.targetY = end.y;
-
-        this.cp1x = centerX + (Math.random() - 0.5) * radiusX;
-        this.cp1y = centerY + (Math.random() - 0.5) * radiusY;
-        this.cp2x = centerX + (Math.random() - 0.5) * radiusX;
-        this.cp2y = centerY + (Math.random() - 0.5) * radiusY;
-
-        this.progress = 0;
-        this.speed = 0.0005 + Math.random() * 0.001;
-        this.opacity = 0.3 + Math.random() * 0.4;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.bezierCurveTo(this.cp1x, this.cp1y, this.cp2x, this.cp2y, this.targetX, this.targetY);
-        const alpha = this.opacity * (1 - Math.abs(this.progress - 0.5) * 2);
-        ctx.strokeStyle = `rgba(60, 80, 120, ${alpha})`;
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        const t = this.progress;
-        const cx = (1-t)**3 * this.x + 3*(1-t)**2*t * this.cp1x + 3*(1-t)*t**2 * this.cp2x + t**3 * this.targetX;
-        const cy = (1-t)**3 * this.y + 3*(1-t)**2*t * this.cp1y + 3*(1-t)*t**2 * this.cp2y + t**3 * this.targetY;
-        
-        ctx.beginPath();
-        ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 95, 31, ${alpha * 1.5})`;
-        ctx.fill();
-
-        this.progress += this.speed;
-        if (this.progress > 1) this.reset();
-      }
-    }
-
-    for (let i = 0; i < 12; i++) {
-      particles.push(new Connection());
-    }
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => p.draw());
-      requestAnimationFrame(animate);
-    };
-
-    animate();
-  });
 </script>
 
 <canvas bind:this={canvas} class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
@@ -106,18 +18,18 @@
 <main class="min-h-screen flex flex-col relative z-10">
   <!-- Header / Nav -->
   <header class="p-6 border-b border-blueprint-blue flex justify-between items-center">
-    <div class="mono text-mission-orange font-bold text-xl">IMR_SYSTEMS_v2.1</div>
-    <div class="status-indicator">[STATUS: MISSION_ACTIVE]</div>
+    <div class="mono text-mission-orange font-bold text-xl">IMR_SYSTEMS_v7.4</div>
+    <div class="status-indicator">[STATUS: CHARITABLE_CORPORATION_ACTIVE]</div>
   </header>
 
   <!-- Hero Section -->
   <section class="flex-grow flex flex-col justify-center items-center text-center p-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blueprint-blue/20 to-transparent">
-    <div class="mono text-mission-orange mb-4 tracking-[0.2em]">[NON-PROFIT MISSION: REBUILD_REUSE_REPURPOSE]</div>
+    <div class="mono text-mission-orange mb-4 tracking-[0.2em]">[NYS CHARITABLE CORPORATION: SECTION_402_NPCL]</div>
     <h1 class="text-5xl md:text-7xl mb-6 max-w-5xl leading-tight">
       Waste is just matter at the <span class="text-mission-orange">wrong coordinates.</span>
     </h1>
     <p class="text-xl md:text-2xl text-lunar-gray/80 max-w-3xl mb-10">
-      IMR is a non-profit engine architecting a localized barter economy for construction materials and a solar-powered transportation future.
+      Executing Ex-Situ Resource Utilization (ESRU) to intercept industrial waste streams and redeploy them as resilient infrastructure for LMI populations.
     </p>
     <div class="flex gap-4">
       <button class="btn-mission">Join the Mission</button>
@@ -129,16 +41,16 @@
   <section class="p-10 md:p-20 border-y border-blueprint-blue bg-blueprint-blue/10">
     <div class="max-w-4xl mx-auto">
       <div class="mono text-xs text-blueprint-blue mb-2">// MISSION_OBJECTIVE</div>
-      <h2 class="text-3xl mb-6">Sustainability shouldn't be a luxury—it should be a stockpile.</h2>
+      <h2 class="text-3xl mb-6">Promoting environmental stewardship and resource equity.</h2>
       <p class="text-2xl leading-relaxed italic">
-        "Our mission is to democratize access to 'non-precious' materials. We facilitate the exchange of materials the market has forgotten, turning potential waste into community resilience."
+        "IMR exists to serve distressed communities by diverting industrial components from the waste stream, lessening the burdens of government through the redevelopment of brownfield sites into public-benefit energy assets."
       </p>
     </div>
   </section>
 
   <!-- Operational Sequences -->
   <section class="p-10 md:p-20">
-    <h2 class="text-3xl mb-12 text-center">The New Trinity</h2>
+    <h2 class="text-3xl mb-12 text-center">Operational Sequences</h2>
     <div class="grid md:grid-cols-3 gap-8">
       {#each sequences as seq}
         <div class="border-blueprint p-6 hover:bg-blueprint-blue/20 transition-all group">
@@ -176,12 +88,13 @@
       <div>
         <div class="mono text-mission-orange mb-4">ENTITY_DATA</div>
         <p>Integrated Materials Reuse Inc.</p>
-        <p class="text-sm text-lunar-gray/50 mt-2">[501(c)(3) PENDING]</p>
+        <p class="text-sm text-lunar-gray/50 mt-2">NYS Charitable Corporation</p>
+        <p class="text-xs text-lunar-gray/40 mt-1">[501(c)(3) PENDING]</p>
       </div>
       <div>
         <div class="mono text-mission-orange mb-4">COORDINATES</div>
+        <p>County of HERKIMER, New York</p>
         <p>Serving the I-90 Corridor</p>
-        <p>Contiguous NYS Counties</p>
       </div>
       <div>
         <div class="mono text-mission-orange mb-4">TELEMETRY</div>
