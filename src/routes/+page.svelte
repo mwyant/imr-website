@@ -11,6 +11,94 @@
     { id: 'ESRU-1', name: 'EX-SITU LOGISTICS', status: 'MISSION_CRITICAL', desc: 'Scaling reverse logistics and deconstruction expertise to serve low-to-moderate income (LMI) populations across the region.' },
     { id: 'HUB-1', name: 'GOVERNMENT PARTNERSHIP', status: 'ACTIVE_COLLABORATION', desc: 'Lessening the burdens of government by redeveloping brownfield sites into public-benefit energy assets and community resources.' }
   ];
+
+  let canvas;
+  onMount(() => {
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    const resize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Connection {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const radiusX = width * 0.4;
+        const radiusY = height * 0.3;
+
+        const getPoint = () => {
+          const angle = Math.random() * Math.PI * 2;
+          const r = 0.8 + Math.random() * 0.2;
+          return {
+            x: centerX + Math.cos(angle) * radiusX * r,
+            y: centerY + Math.sin(angle) * radiusY * r
+          };
+        };
+
+        const start = getPoint();
+        const end = getPoint();
+
+        this.x = start.x;
+        this.y = start.y;
+        this.targetX = end.x;
+        this.targetY = end.y;
+
+        this.cp1x = centerX + (Math.random() - 0.5) * radiusX;
+        this.cp1y = centerY + (Math.random() - 0.5) * radiusY;
+        this.cp2x = centerX + (Math.random() - 0.5) * radiusX;
+        this.cp2y = centerY + (Math.random() - 0.5) * radiusY;
+
+        this.progress = 0;
+        this.speed = 0.0005 + Math.random() * 0.001;
+        this.opacity = 0.3 + Math.random() * 0.4;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.bezierCurveTo(this.cp1x, this.cp1y, this.cp2x, this.cp2y, this.targetX, this.targetY);
+        const alpha = this.opacity * (1 - Math.abs(this.progress - 0.5) * 2);
+        ctx.strokeStyle = `rgba(60, 80, 120, ${alpha})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        const t = this.progress;
+        const cx = (1-t)**3 * this.x + 3*(1-t)**2*t * this.cp1x + 3*(1-t)*t**2 * this.cp2x + t**3 * this.targetX;
+        const cy = (1-t)**3 * this.y + 3*(1-t)**2*t * this.cp1y + 3*(1-t)*t**2 * this.cp2y + t**3 * this.targetY;
+        
+        ctx.beginPath();
+        ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 95, 31, ${alpha * 1.5})`;
+        ctx.fill();
+
+        this.progress += this.speed;
+        if (this.progress > 1) this.reset();
+      }
+    }
+
+    for (let i = 0; i < 12; i++) {
+      particles.push(new Connection());
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => p.draw());
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+  });
 </script>
 
 <canvas bind:this={canvas} class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
