@@ -46,10 +46,11 @@ export const actions = {
 
     try {
       // 1. Log to Google Sheets (Mission Log)
+      console.log(`Attempting to log ${type} submission to sheet ${SPREADSHEET_ID}...`);
       const sheets = google.sheets({ version: 'v4', auth });
       const timestamp = new Date().toISOString();
       
-      await sheets.spreadsheets.values.append({
+      const appendResult = await sheets.spreadsheets.values.append({
         spreadsheetId: SPREADSHEET_ID,
         range: 'Sheet1!A:F',
         valueInputOption: 'USER_ENTERED',
@@ -57,6 +58,7 @@ export const actions = {
           values: [[timestamp, name, email, type, subject, message]]
         }
       });
+      console.log('Sheets log successful:', appendResult.statusText);
 
       // 2. Send Email via Nodemailer
       const transporter = nodemailer.createTransport({
