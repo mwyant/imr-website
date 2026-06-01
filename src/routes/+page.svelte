@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { enhance } from '$app/forms';
 
   const sequences = [
     { id: '01', title: 'Rebuild (ESRU)', desc: 'Utilizing Ex-Situ Resource Utilization (ESRU) to intercept construction and demolition materials, diverting high-value components from landfills to distressed communities.' },
@@ -13,6 +14,27 @@
   ];
 
   let canvas;
+  let showNewsletterModal = false;
+  let showContactModal = false;
+  let isSubmitting = false;
+  let submissionResult = null;
+
+  function closeModal() {
+    showNewsletterModal = false;
+    showContactModal = false;
+    submissionResult = null;
+    isSubmitting = false;
+  }
+
+  // Handle body scroll lock when modal is open
+  $: if (typeof document !== 'undefined') {
+    if (showNewsletterModal || showContactModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
   onMount(() => {
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -119,9 +141,9 @@
     <p class="text-xl md:text-2xl text-lunar-gray/80 max-w-3xl mb-10">
       Executing Ex-Situ Resource Utilization (ESRU) to intercept industrial waste streams and redeploy them as resilient infrastructure for LMI populations.
     </p>
-    <div class="flex gap-4">
-      <button class="btn-mission">Join the Mission</button>
-      <button class="border border-lunar-gray text-lunar-gray px-6 py-3 uppercase font-bold hover:bg-lunar-gray hover:text-deep-space transition-all">Contact Mission Control</button>
+    <div class="flex flex-col sm:flex-row gap-4">
+      <button class="btn-mission" on:click={() => { showNewsletterModal = true; submissionResult = null; }}>Join the Mission</button>
+      <button class="border border-lunar-gray text-lunar-gray px-6 py-3 uppercase font-bold hover:bg-lunar-gray hover:text-deep-space transition-all" on:click={() => { showContactModal = true; submissionResult = null; }}>Contact Mission Control</button>
     </div>
   </section>
 
@@ -164,7 +186,7 @@
             <h3 class="text-2xl mb-2">[{dep.name}]</h3>
             <p class="text-lunar-gray/70 max-w-xl">{dep.desc}</p>
           </div>
-          <button class="border border-blueprint-blue px-4 py-2 mono text-xs hover:bg-blueprint-blue transition-all">VIEW_TRAJECTORY_DATA</button>
+          <button class="border border-blueprint-blue px-4 py-2 mono text-xs hover:bg-blueprint-blue transition-all" on:click={() => { showContactModal = true; submissionResult = null; }}>VIEW_TRAJECTORY_DATA</button>
         </div>
       {/each}
     </div>
@@ -196,6 +218,201 @@
   </footer>
 </main>
 
+<!-- Newsletter Modal -->
+{#if showNewsletterModal}
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-deep-space/90 backdrop-blur-md p-4" on:click|self={closeModal} on:keydown|self={(e) => e.key === 'Escape' && closeModal()} role="button" tabindex="-1">
+    <div class="w-full max-w-md border border-mission-orange bg-deep-space p-6 relative shadow-[0_0_30px_rgba(255,95,31,0.2)]">
+      <!-- CRT Scanline Overlay -->
+      <div class="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom,rgba(255,95,31,0.05)_50%,transparent_50%)] bg-[length:100%_4px] opacity-20"></div>
+      
+      <!-- Header -->
+      <div class="flex justify-between items-center border-b border-mission-orange/30 pb-4 mb-6">
+        <div class="mono text-mission-orange font-bold text-sm tracking-wider">[TERMINAL: NEWSLETTER_SIGNUP]</div>
+        <button class="mono text-mission-orange hover:text-white transition-colors" on:click={closeModal}>[X]</button>
+      </div>
+
+      {#if submissionResult?.success}
+        <div class="text-center py-8">
+          <div class="mono text-green-500 text-xl font-bold mb-4">>>> TRANSMISSION_SUCCESSFUL</div>
+          <p class="text-lunar-gray/80 mb-6">Your coordinates have been added to our telemetry. Welcome to the mission.</p>
+          <button class="border border-green-500 text-green-500 px-4 py-2 mono text-xs hover:bg-green-500/20 transition-all" on:click={closeModal}>CLOSE_TERMINAL</button>
+        </div>
+      {:else}
+        <form method="POST" action="?/contact" use:enhance={() => {
+          isSubmitting = true;
+          submissionResult = null;
+          return async ({ result }) => {
+            isSubmitting = false;
+            if (result.type === 'success') {
+              submissionResult = { success: true };
+            } else {
+              submissionResult = { success: false, error: result.data?.error || 'Transmission failed.' };
+            }
+          };
+        }}>
+          <input type="hidden" name="type" value="newsletter" />
+          
+          <p class="text-sm text-lunar-gray/80 mb-6 leading-relaxed">
+            Enter your email to receive periodic telemetry updates, operational sequences, and resource utilization reports from Herkimer County.
+          </p>
+
+          <div class="mb-6">
+            <label class="block mono text-xs text-mission-orange mb-2" for="newsletter-email">ENTER_EMAIL_ADDRESS:</label>
+            <input 
+              type="email" 
+              id="newsletter-email" 
+              name="email" 
+              required 
+              placeholder="user@domain.com"
+              class="w-full bg-blueprint-blue/30 border border-blueprint-blue focus:border-mission-orange text-white px-4 py-3 mono text-sm outline-none transition-all"
+              disabled={isSubmitting}
+            />
+          </div>
+
+          {#if submissionResult?.error}
+            <div class="mono text-red-500 text-xs mb-4">
+              >>> ERROR: {submissionResult.error}
+            </div>
+          {/if}
+
+          <div class="flex justify-end gap-4">
+            <button 
+              type="button" 
+              class="border border-blueprint-blue text-lunar-gray px-4 py-2 mono text-xs hover:bg-blueprint-blue transition-all" 
+              on:click={closeModal}
+              disabled={isSubmitting}
+            >
+              ABORT_MISSION
+            </button>
+            <button 
+              type="submit" 
+              class="bg-mission-orange text-white px-6 py-2 font-bold uppercase tracking-tighter hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mono text-xs"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'TRANSMITTING...' : 'JOIN_MISSION'}
+            </button>
+          </div>
+        </form>
+      {/if}
+    </div>
+  </div>
+{/if}
+
+<!-- Contact Modal -->
+{#if showContactModal}
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-deep-space/90 backdrop-blur-md p-4" on:click|self={closeModal} on:keydown|self={(e) => e.key === 'Escape' && closeModal()} role="button" tabindex="-1">
+    <div class="w-full max-w-lg border border-mission-orange bg-deep-space p-6 relative shadow-[0_0_30px_rgba(255,95,31,0.2)]">
+      <!-- CRT Scanline Overlay -->
+      <div class="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom,rgba(255,95,31,0.05)_50%,transparent_50%)] bg-[length:100%_4px] opacity-20"></div>
+      
+      <!-- Header -->
+      <div class="flex justify-between items-center border-b border-mission-orange/30 pb-4 mb-6">
+        <div class="mono text-mission-orange font-bold text-sm tracking-wider">[TERMINAL: CONTACT_MISSION_CONTROL]</div>
+        <button class="mono text-mission-orange hover:text-white transition-colors" on:click={closeModal}>[X]</button>
+      </div>
+
+      {#if submissionResult?.success}
+        <div class="text-center py-8">
+          <div class="mono text-green-500 text-xl font-bold mb-4">>>> TRANSMISSION_SUCCESSFUL</div>
+          <p class="text-lunar-gray/80 mb-6">Your message has been routed to Mike Wyant Jr. at Mission Control. We will establish contact shortly.</p>
+          <button class="border border-green-500 text-green-500 px-4 py-2 mono text-xs hover:bg-green-500/20 transition-all" on:click={closeModal}>CLOSE_TERMINAL</button>
+        </div>
+      {:else}
+        <form method="POST" action="?/contact" use:enhance={() => {
+          isSubmitting = true;
+          submissionResult = null;
+          return async ({ result }) => {
+            isSubmitting = false;
+            if (result.type === 'success') {
+              submissionResult = { success: true };
+            } else {
+              submissionResult = { success: false, error: result.data?.error || 'Transmission failed.' };
+            }
+          };
+        }}>
+          <input type="hidden" name="type" value="contact" />
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block mono text-xs text-mission-orange mb-2" for="contact-name">COORDINATOR_NAME:</label>
+              <input 
+                type="text" 
+                id="contact-name" 
+                name="name" 
+                required 
+                placeholder="John Doe"
+                class="w-full bg-blueprint-blue/30 border border-blueprint-blue focus:border-mission-orange text-white px-4 py-3 mono text-sm outline-none transition-all"
+                disabled={isSubmitting}
+              />
+            </div>
+            <div>
+              <label class="block mono text-xs text-mission-orange mb-2" for="contact-email">RETURN_EMAIL_ADDRESS:</label>
+              <input 
+                type="email" 
+                id="contact-email" 
+                name="email" 
+                required 
+                placeholder="user@domain.com"
+                class="w-full bg-blueprint-blue/30 border border-blueprint-blue focus:border-mission-orange text-white px-4 py-3 mono text-sm outline-none transition-all"
+                disabled={isSubmitting}
+              />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="block mono text-xs text-mission-orange mb-2" for="contact-subject">TRANSMISSION_SUBJECT:</label>
+            <input 
+              type="text" 
+              id="contact-subject" 
+              name="subject" 
+              placeholder="e.g., ESRU Partnership, Brownfield Redevelopment"
+              class="w-full bg-blueprint-blue/30 border border-blueprint-blue focus:border-mission-orange text-white px-4 py-3 mono text-sm outline-none transition-all"
+              disabled={isSubmitting}
+            />
+          </div>
+
+          <div class="mb-6">
+            <label class="block mono text-xs text-mission-orange mb-2" for="contact-message">TRANSMISSION_BODY:</label>
+            <textarea 
+              id="contact-message" 
+              name="message" 
+              required 
+              rows="4"
+              placeholder="Enter your message here..."
+              class="w-full bg-blueprint-blue/30 border border-blueprint-blue focus:border-mission-orange text-white px-4 py-3 mono text-sm outline-none transition-all resize-none"
+              disabled={isSubmitting}
+            ></textarea>
+          </div>
+
+          {#if submissionResult?.error}
+            <div class="mono text-red-500 text-xs mb-4">
+              >>> ERROR: {submissionResult.error}
+            </div>
+          {/if}
+
+          <div class="flex justify-end gap-4">
+            <button 
+              type="button" 
+              class="border border-blueprint-blue text-lunar-gray px-4 py-2 mono text-xs hover:bg-blueprint-blue transition-all" 
+              on:click={closeModal}
+              disabled={isSubmitting}
+            >
+              ABORT_MISSION
+            </button>
+            <button 
+              type="submit" 
+              class="bg-mission-orange text-white px-6 py-2 font-bold uppercase tracking-tighter hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mono text-xs"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT_DATA'}
+            </button>
+          </div>
+        </form>
+      {/if}
+    </div>
+  </div>
+{/if}
+
 <style>
   :global(body) {
     background-image: 
@@ -204,4 +421,3 @@
     background-size: 40px 40px;
   }
 </style>
-
