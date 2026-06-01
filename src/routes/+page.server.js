@@ -61,25 +61,28 @@ export const actions = {
       if (type === 'newsletter') {
         mailOptions = {
           from: `"IMR Systems" <${gmailUser}>`,
-          to: 'mike@wyantswalk.net',
+          to: `mike@wyantswalk.net, ${email}`,
           subject: `[IMR_NEWSLETTER_SIGNUP] New Subscriber: ${email}`,
-          text: `A new user has requested to join the mission newsletter.\n\nEmail: ${email}\nTimestamp: ${new Date().toISOString()}`,
+          text: `A new user has requested to join the mission newsletter.\n\nEmail: ${email}\nTimestamp: ${new Date().toISOString()}\n\n[VERIFICATION_COPY] This is a copy of your transmission to IMR Mission Control.`,
           html: `
             <div style="font-family: monospace; background-color: #0b132b; color: #e0e1dd; padding: 20px; border: 1px solid #1b263b;">
               <h2 style="color: #ff5f1f; border-bottom: 1px solid #ff5f1f; padding-bottom: 10px;">[IMR_NEWSLETTER_SIGNUP]</h2>
               <p>A new user has requested to join the mission newsletter.</p>
               <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #ff5f1f;">${email}</a></p>
               <p style="color: #5c677d; font-size: 11px; margin-top: 20px;">Timestamp: ${new Date().toISOString()}</p>
+              <p style="color: #5c677d; font-size: 10px; margin-top: 30px; border-top: 1px solid #1b263b; padding-top: 10px;">
+                [VERIFICATION_COPY] This is a copy of your transmission to IMR Mission Control.
+              </p>
             </div>
           `
         };
       } else {
         mailOptions = {
           from: `"IMR Systems" <${gmailUser}>`,
-          to: 'mike@wyantswalk.net',
+          to: `mike@wyantswalk.net, ${email}`,
           replyTo: `"${name}" <${email}>`,
           subject: `[IMR_CONTACT_FORM] ${subject}`,
-          text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}\n\nTimestamp: ${new Date().toISOString()}`,
+          text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}\n\nTimestamp: ${new Date().toISOString()}\n\n[VERIFICATION_COPY] This is a copy of your transmission to IMR Mission Control.`,
           html: `
             <div style="font-family: monospace; background-color: #0b132b; color: #e0e1dd; padding: 20px; border: 1px solid #1b263b;">
               <h2 style="color: #ff5f1f; border-bottom: 1px solid #ff5f1f; padding-bottom: 10px;">[IMR_CONTACT_FORM]</h2>
@@ -90,6 +93,9 @@ export const actions = {
               <p><strong>Message:</strong></p>
               <p style="white-space: pre-wrap; background-color: #1c2541; padding: 15px; border-left: 3px solid #ff5f1f;">${message}</p>
               <p style="color: #5c677d; font-size: 11px; margin-top: 20px;">Timestamp: ${new Date().toISOString()}</p>
+              <p style="color: #5c677d; font-size: 10px; margin-top: 30px; border-top: 1px solid #1b263b; padding-top: 10px;">
+                [VERIFICATION_COPY] This is a copy of your transmission to IMR Mission Control.
+              </p>
             </div>
           `
         };
