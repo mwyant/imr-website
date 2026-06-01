@@ -123,6 +123,15 @@
   });
 </script>
 
+<svelte:head>
+  <title>Integrated Materials Reuse (IMR) | Mission Control</title>
+  <meta name="description" content="IMR transforms industrial waste into community infrastructure through advanced reverse logistics and Ex-Situ Resource Utilization (ESRU) in New York State." />
+  <meta property="og:title" content="Integrated Materials Reuse (IMR) | Mission Control" />
+  <meta property="og:description" content="Executing Ex-Situ Resource Utilization (ESRU) to intercept industrial waste streams and redeploy them as resilient infrastructure." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://integratedmaterialsreuse.org" />
+</svelte:head>
+
 <canvas bind:this={canvas} class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
 
 <main class="min-h-screen flex flex-col relative z-10">
