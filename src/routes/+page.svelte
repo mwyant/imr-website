@@ -9,8 +9,9 @@
   ];
 
   const trajectory = [
-    { id: 'ESRU-1', name: 'EX-SITU LOGISTICS', status: 'MISSION_CRITICAL', desc: 'Scaling reverse logistics and deconstruction expertise to serve low-to-moderate income (LMI) populations across the region.' },
-    { id: 'HUB-1', name: 'GOVERNMENT PARTNERSHIP', status: 'ACTIVE_COLLABORATION', desc: 'Lessening the burdens of government by redeveloping brownfield sites into public-benefit energy assets and community resources.' }
+    { id: 'ESRU-1', name: 'EX-SITU LOGISTICS', status: 'IN_PROGRESS', desc: 'Scaling reverse logistics and deconstruction expertise with active partner Costello Dismantling, Inc. to serve LMI populations.' },
+    { id: 'MK-1', name: 'IMR MK-1 SYSTEM', status: 'PHASE_1_DEVELOPMENT', desc: 'Engineering the flagship mobile recovery unit for on-site material processing and quality verification.' },
+    { id: 'HUB-1', name: 'GOVERNMENT PARTNERSHIP', status: 'PIPELINE_MILESTONE', desc: 'Long-term redevelopment of brownfield sites into public-benefit energy assets and community resources.' }
   ];
 
   let canvas;
@@ -195,7 +196,7 @@
             <h3 class="text-2xl mb-2">[{dep.name}]</h3>
             <p class="text-lunar-gray/70 max-w-xl">{dep.desc}</p>
           </div>
-          <button class="border border-blueprint-blue px-4 py-2 mono text-xs hover:bg-blueprint-blue transition-all" on:click={() => { showContactModal = true; submissionResult = null; }}>VIEW_TRAJECTORY_DATA</button>
+          <button class="border border-blueprint-blue px-4 py-2 mono text-xs opacity-50 cursor-not-allowed">VIEW_TRAJECTORY_DATA</button>
         </div>
       {/each}
     </div>
