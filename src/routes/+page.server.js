@@ -62,12 +62,13 @@ export const actions = {
         mailOptions = {
           from: `"IMR Systems" <${gmailUser}>`,
           to: `mike@wyantswalk.net, ${email}`,
-          subject: `[IMR_NEWSLETTER_SIGNUP] New Subscriber: ${email}`,
-          text: `A new user has requested to join the mission newsletter.\n\nEmail: ${email}\nTimestamp: ${new Date().toISOString()}\n\n[VERIFICATION_COPY] This is a copy of your transmission to IMR Mission Control.`,
+          subject: `[IMR_NEWSLETTER_SIGNUP] New Subscriber: ${name}`,
+          text: `A new user has requested to join the mission newsletter.\n\nName: ${name}\nEmail: ${email}\nTimestamp: ${new Date().toISOString()}\n\n[VERIFICATION_COPY] This is a copy of your transmission to IMR Mission Control.`,
           html: `
             <div style="font-family: monospace; background-color: #0b132b; color: #e0e1dd; padding: 20px; border: 1px solid #1b263b;">
               <h2 style="color: #ff5f1f; border-bottom: 1px solid #ff5f1f; padding-bottom: 10px;">[IMR_NEWSLETTER_SIGNUP]</h2>
               <p>A new user has requested to join the mission newsletter.</p>
+              <p><strong>Name:</strong> ${name}</p>
               <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #ff5f1f;">${email}</a></p>
               <p style="color: #5c677d; font-size: 11px; margin-top: 20px;">Timestamp: ${new Date().toISOString()}</p>
               <p style="color: #5c677d; font-size: 10px; margin-top: 30px; border-top: 1px solid #1b263b; padding-top: 10px;">

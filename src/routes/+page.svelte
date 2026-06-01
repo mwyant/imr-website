@@ -253,8 +253,21 @@
           <input type="hidden" name="type" value="newsletter" />
           
           <p class="text-sm text-lunar-gray/80 mb-6 leading-relaxed">
-            Enter your email to receive periodic telemetry updates, operational sequences, and resource utilization reports from Herkimer County.
+            Enter your details to receive periodic telemetry updates, operational sequences, and resource utilization reports from Herkimer County.
           </p>
+
+          <div class="mb-4">
+            <label class="block mono text-xs text-mission-orange mb-2" for="newsletter-name">COORDINATOR_NAME:</label>
+            <input 
+              type="text" 
+              id="newsletter-name" 
+              name="name" 
+              required 
+              placeholder="John Doe"
+              class="w-full bg-blueprint-blue/30 border border-blueprint-blue focus:border-mission-orange text-white px-4 py-3 mono text-sm outline-none transition-all"
+              disabled={isSubmitting}
+            />
+          </div>
 
           <div class="mb-6">
             <label class="block mono text-xs text-mission-orange mb-2" for="newsletter-email">ENTER_EMAIL_ADDRESS:</label>
