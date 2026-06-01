@@ -45,18 +45,21 @@ export const actions = {
     auth.setCredentials({ refresh_token: refreshToken });
 
     try {
-      // 1. Log to Google Sheets (Mission Log)
-      const sheets = google.sheets({ version: 'v4', auth });
       const timestamp = new Date().toISOString();
-      
-      await sheets.spreadsheets.values.append({
-        spreadsheetId: SPREADSHEET_ID,
-        range: 'Sheet1!A:F',
-        valueInputOption: 'USER_ENTERED',
-        requestBody: {
-          values: [[timestamp, name, email, type, subject, message]]
-        }
-      });
+
+      // 1. Log to Google Sheets (Mission Log) - ONLY for newsletter signups
+      if (type === 'newsletter') {
+        const sheets = google.sheets({ version: 'v4', auth });
+        
+        await sheets.spreadsheets.values.append({
+          spreadsheetId: SPREADSHEET_ID,
+          range: 'Sheet1!A:F',
+          valueInputOption: 'USER_ENTERED',
+          requestBody: {
+            values: [[timestamp, name, email, type, subject, message]]
+          }
+        });
+      }
 
       // 2. Send Email via Nodemailer
       const transporter = nodemailer.createTransport({
