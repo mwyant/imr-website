@@ -139,7 +139,7 @@
   <!-- Header / Nav -->
   <header class="p-6 border-b border-blueprint-blue flex justify-between items-center">
     <div class="mono text-mission-orange font-bold text-xl">IMR_SYSTEMS_v7.4</div>
-    <div class="status-indicator">[STATUS: CHARITABLE_CORPORATION_ACTIVE]</div>
+    <div class="status-indicator">[STATUS: CHARITABLE_CORPORATION_PENDING]</div>
   </header>
 
   <!-- Hero Section -->
