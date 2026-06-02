@@ -9,7 +9,7 @@
   ];
 
   const trajectory = [
-    { id: 'ESRU-1', name: 'EX-SITU LOGISTICS', status: 'IN_PROGRESS', desc: 'Scaling reverse logistics and deconstruction expertise with active partner Costello Dismantling, Inc. to serve LMI populations.' },
+    { id: 'ESRU-1', name: 'EX-SITU LOGISTICS', status: 'IN_PROGRESS', desc: 'Scaling reverse logistics and deconstruction expertise with active partners to serve LMI populations.' },
     { id: 'MK-1', name: 'IMR MK-1 SYSTEM', status: 'PHASE_1_DEVELOPMENT', desc: 'Engineering the flagship mobile recovery unit for on-site material processing and quality verification.' },
     { id: 'HUB-1', name: 'GOVERNMENT PARTNERSHIP', status: 'PIPELINE_MILESTONE', desc: 'Long-term redevelopment of brownfield sites into public-benefit energy assets and community resources.' }
   ];
