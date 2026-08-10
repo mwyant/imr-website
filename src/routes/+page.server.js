@@ -4,15 +4,40 @@ import { env } from '$env/dynamic/private';
 
 const SPREADSHEET_ID = '1WgtN1f66v9H6qDnvyZJCmd6VZHfxNOYye2ytEZJBO3c';
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 /** @type {import('./$types').Actions} */
 export const actions = {
   contact: async ({ request }) => {
     const data = await request.formData();
-    const name = data.get('name');
-    const email = data.get('email');
-    const subject = data.get('subject') || 'General Inquiry';
-    const message = data.get('message') || '';
+    
+    // Honeypot check for spam bots
+    const honeypot = data.get('website_url');
+    if (honeypot) {
+      // Silently accept without triggering email or sheets
+      return { success: true };
+    }
+
+    const rawName = data.get('name');
+    const rawEmail = data.get('email');
+    const rawSubject = data.get('subject') || 'General Inquiry';
+    const rawMessage = data.get('message') || '';
     const type = data.get('type'); // 'contact' or 'newsletter'
+
+    const name = typeof rawName === 'string' ? rawName.trim().slice(0, 100) : '';
+    const email = typeof rawEmail === 'string' ? rawEmail.trim().slice(0, 150) : '';
+    const subject = typeof rawSubject === 'string' ? rawSubject.trim().slice(0, 200) : 'General Inquiry';
+    const message = typeof rawMessage === 'string' ? rawMessage.trim().slice(0, 5000) : '';
 
     // Validation
     if (type === 'contact') {
@@ -25,6 +50,10 @@ export const actions = {
       }
     } else {
       return { success: false, error: 'Invalid transmission type.' };
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+      return { success: false, error: 'Invalid email address format.' };
     }
 
     // Check environment variables
@@ -74,6 +103,10 @@ export const actions = {
       });
 
       let mailOptions;
+      const safeName = escapeHtml(name);
+      const safeEmail = escapeHtml(email);
+      const safeSubject = escapeHtml(subject);
+      const safeMessage = escapeHtml(message);
 
       if (type === 'newsletter') {
         mailOptions = {
@@ -85,8 +118,8 @@ export const actions = {
             <div style="font-family: monospace; background-color: #0b132b; color: #e0e1dd; padding: 20px; border: 1px solid #1b263b;">
               <h2 style="color: #ff5f1f; border-bottom: 1px solid #ff5f1f; padding-bottom: 10px;">[IMR_NEWSLETTER_SIGNUP]</h2>
               <p>A new user has requested to join the mission newsletter.</p>
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #ff5f1f;">${email}</a></p>
+              <p><strong>Name:</strong> ${safeName}</p>
+              <p><strong>Email:</strong> <a href="mailto:${safeEmail}" style="color: #ff5f1f;">${safeEmail}</a></p>
               <p style="color: #5c677d; font-size: 11px; margin-top: 20px;">Timestamp: ${timestamp}</p>
               <p style="color: #5c677d; font-size: 10px; margin-top: 30px; border-top: 1px solid #1b263b; padding-top: 10px;">
                 [VERIFICATION_COPY] This is a copy of your transmission to IMR Mission Control.
@@ -104,12 +137,12 @@ export const actions = {
           html: `
             <div style="font-family: monospace; background-color: #0b132b; color: #e0e1dd; padding: 20px; border: 1px solid #1b263b;">
               <h2 style="color: #ff5f1f; border-bottom: 1px solid #ff5f1f; padding-bottom: 10px;">[IMR_CONTACT_FORM]</h2>
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #ff5f1f;">${email}</a></p>
-              <p><strong>Subject:</strong> ${subject}</p>
+              <p><strong>Name:</strong> ${safeName}</p>
+              <p><strong>Email:</strong> <a href="mailto:${safeEmail}" style="color: #ff5f1f;">${safeEmail}</a></p>
+              <p><strong>Subject:</strong> ${safeSubject}</p>
               <hr style="border: 0; border-top: 1px solid #1b263b; margin: 20px 0;" />
               <p><strong>Message:</strong></p>
-              <p style="white-space: pre-wrap; background-color: #1c2541; padding: 15px; border-left: 3px solid #ff5f1f;">${message}</p>
+              <p style="white-space: pre-wrap; background-color: #1c2541; padding: 15px; border-left: 3px solid #ff5f1f;">${safeMessage}</p>
               <p style="color: #5c677d; font-size: 11px; margin-top: 20px;">Timestamp: ${timestamp}</p>
               <p style="color: #5c677d; font-size: 10px; margin-top: 30px; border-top: 1px solid #1b263b; padding-top: 10px;">
                 [VERIFICATION_COPY] This is a copy of your transmission to IMR Mission Control.

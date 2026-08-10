@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { enhance } from '$app/forms';
 
   const sequences = [
@@ -19,6 +19,8 @@
   let showContactModal = false;
   let isSubmitting = false;
   let submissionResult = null;
+  let animationFrameId;
+  let resizeHandler;
 
   function closeModal() {
     showNewsletterModal = false;
@@ -27,7 +29,7 @@
     isSubmitting = false;
   }
 
-  // Handle body scroll lock when modal is open
+  // Handle body scroll lock and global escape key when modal is open
   $: if (typeof document !== 'undefined') {
     if (showNewsletterModal || showContactModal) {
       document.body.style.overflow = 'hidden';
@@ -41,13 +43,13 @@
     let width, height;
     let particles = [];
 
-    const resize = () => {
+    resizeHandler = () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
     };
 
-    window.addEventListener('resize', resize);
-    resize();
+    window.addEventListener('resize', resizeHandler);
+    resizeHandler();
 
     class Connection {
       constructor() {
@@ -115,12 +117,21 @@
     }
 
     const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => p.draw());
-      requestAnimationFrame(animate);
+      if (!document.hidden) {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => p.draw());
+      }
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
+  });
+
+  onDestroy(() => {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', resizeHandler);
+      cancelAnimationFrame(animationFrameId);
+    }
   });
 </script>
 
