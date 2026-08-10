@@ -139,7 +139,7 @@
   <!-- Header / Nav -->
   <header class="p-6 border-b border-blueprint-blue flex justify-between items-center">
     <div class="mono text-mission-orange font-bold text-xl">IMR_SYSTEMS_v7.4</div>
-    <div class="status-indicator">[STATUS: CHARITABLE_CORPORATION_PENDING]</div>
+    <div class="status-indicator">[STATUS: 501(C)(3) TAX-EXEMPT]</div>
   </header>
 
   <!-- Hero Section -->
@@ -209,7 +209,16 @@
         <div class="mono text-mission-orange mb-4">ENTITY_DATA</div>
         <p>Integrated Materials Reuse Inc.</p>
         <p class="text-sm text-lunar-gray/50 mt-2">NYS Charitable Corporation</p>
-        <p class="text-xs text-lunar-gray/40 mt-1">[501(c)(3) PENDING]</p>
+        <div class="relative group inline-block">
+          <p class="text-xs text-mission-orange mt-1 cursor-help">[501(c)(3) TAX-EXEMPT]</p>
+          <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block w-72 p-3 bg-deep-space border border-mission-orange text-xs text-lunar-gray shadow-[0_0_15px_rgba(255,95,31,0.2)] z-50">
+            <div class="mono text-mission-orange font-bold mb-1">[IRS_DETERMINATION_DATA]</div>
+            <p><strong>Effective Date:</strong> April 30, 2026</p>
+            <p><strong>EIN:</strong> 42-2286091</p>
+            <p><strong>Status:</strong> Public Charity 170(b)(1)(A)(vi)</p>
+            <p class="mt-1 text-lunar-gray/80">Contributions are tax-deductible under IRC Section 170.</p>
+          </div>
+        </div>
       </div>
       <div>
         <div class="mono text-mission-orange mb-4">COORDINATES</div>
